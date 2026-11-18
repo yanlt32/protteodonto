@@ -269,13 +269,30 @@ button { font: inherit; color: inherit; cursor: pointer; background: none; borde
 .is-loaded [data-enter]:nth-child(5) { transition-delay: .32s; }
 .is-loaded .hero__media[data-enter] { transition-delay: .15s; transition-duration: 1.3s; }
 
-/* ---------- ticker ---------- */
-.ticker { overflow: hidden; background: var(--navy-800); color: #fff; padding: 1.15rem 0; }
-.ticker__track { display: flex; align-items: center; gap: 2.25rem; width: max-content; animation: ticker 38s linear infinite; }
-.ticker span { font-family: var(--font-display); font-style: italic; font-size: 1.625rem; white-space: nowrap; }
-.ticker i { width: 22px; height: 10px; flex: none; border: 2.5px solid var(--gold-400); border-top: 0; border-radius: 0 0 22px 22px; }
-.ticker:hover .ticker__track { animation-play-state: paused; }
-@keyframes ticker { to { transform: translateX(-50%); } }
+/* ---------- faixas cruzadas ---------- */
+/* faixa única, reta, largura total */
+.bands { position: relative; overflow: hidden; }
+.band { display: flex; align-items: center; overflow: hidden; }
+.band--navy {
+  height: 84px;
+  background: var(--navy-800); color: #fff;
+  border-block: 1px solid rgba(232, 180, 79, .35);
+}
+.band__track {
+  display: flex; align-items: center; gap: 2rem; width: max-content; padding-inline: 1rem;
+  animation: band 50s linear infinite;
+}
+.bands:hover .band__track { animation-play-state: paused; }
+.band__item { font-family: var(--font-display); font-style: italic; font-weight: 500; font-size: 2.125rem; line-height: 1; white-space: nowrap; }
+.band__dot { width: 34px; height: 14px; flex: none; border: 3px solid var(--gold-400); border-top: 0; border-radius: 0 0 34px 34px; }
+@keyframes band { to { transform: translateX(-50%); } }
+
+/* ---------- sorriso 3D do CTA ---------- */
+.cta__mouth { width: min(300px, 80%); margin: 0 auto var(--s-3); }
+.cta__mouth canvas { display: none; width: 100%; height: auto; aspect-ratio: 16 / 10; }
+.cta__mouth.is-3d canvas { display: block; }
+.cta__mouth.is-3d svg { display: none; }
+.cta__mouth .mouth--smile { margin-bottom: 0; }
 
 /* ---------- seções ---------- */
 .section { padding: var(--s-8) 0; position: relative; }
@@ -432,7 +449,7 @@ button { font: inherit; color: inherit; cursor: pointer; background: none; borde
 .mouth-stage__bar i { display: block; height: 100%; width: 100%; background: var(--gold-400); transform-origin: left; transform: scaleX(var(--s, 0)); }
 
 /* sorriso do CTA: a boca abre ao aparecer */
-.mouth--smile { width: 150px; margin: 0 auto var(--s-3); --s: 1; }
+.mouth--smile { width: 150px; margin: 0 auto; --s: 1; }
 .mouth--smile .mouth__body { transform-box: fill-box; transform-origin: 50% 50%; transform: scale(.82, .25); transition: transform 1.2s .2s var(--ease); }
 .cta__card.is-in .mouth--smile .mouth__body { transform: none; }
 .mouth--smile { --sp: 1; }
@@ -578,7 +595,12 @@ button { font: inherit; color: inherit; cursor: pointer; background: none; borde
 
   .hero { min-height: 0; padding-top: calc(var(--header-h) + var(--s-4)); padding-bottom: var(--s-6); }
   .hero__grid { grid-template-columns: 1fr; }
-  .hero__media { order: -1; justify-self: center; width: min(66%, 320px); margin-bottom: var(--s-2); }
+  .hero__media { order: -1; justify-self: center; width: min(66%, 320px); margin-bottom: var(--s-4); }
+  /* selo centralizado na base da foto */
+  .badge-float {
+    left: 0; right: 0; bottom: -28px; margin-inline: auto;
+    width: max-content; max-width: calc(100vw - 2 * var(--gutter));
+  }
   .hero__lead { max-width: none; }
 
   .alin, .faq, .dra, .social__grid { grid-template-columns: 1fr; }
@@ -612,7 +634,6 @@ button { font: inherit; color: inherit; cursor: pointer; background: none; borde
   .hero__facts { gap: var(--s-3); flex-wrap: wrap; }
   .hero__facts li { flex: 1 1 40%; }
   .hero__facts strong { font-size: 1.375rem; }
-  .badge-float { left: -4px; bottom: -6%; }
   .section__head--split { flex-direction: column; align-items: flex-start; }
   .carousel__controls { display: none; }
   .tcard { flex-basis: 84vw; min-height: 380px; padding: var(--s-3); }
@@ -629,6 +650,14 @@ button { font: inherit; color: inherit; cursor: pointer; background: none; borde
   .cta__info { flex-direction: column; align-items: center; }
   .dra__photo::before { inset: var(--s-2) calc(-1 * var(--s-2)) calc(-1 * var(--s-2)) var(--s-2); }
   .dra__sign { right: var(--s-2); }
+
+  .band--navy { height: 62px; }
+  .band__track { gap: 1.25rem; }
+  .band__item { font-size: 1.5rem; }
+  .band__dot { width: 24px; height: 10px; border-width: 2.5px; }
+
+  /* o arco dourado cruzava o selo no celular */
+  .hero__arc { display: none; }
 
   .mouth-stage__skin { max-width: 300px; }
   .mouth-stage__cap { max-width: 300px; font-size: var(--fs-xs); }
@@ -648,5 +677,5 @@ button { font: inherit; color: inherit; cursor: pointer; background: none; borde
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: .001ms !important; animation-iteration-count: 1 !important; transition-duration: .001ms !important; scroll-behavior: auto !important; }
   [data-enter], .js [data-reveal] { opacity: 1 !important; transform: none !important; }
-  .ticker__track { animation: none; }
+  .band__track { animation: none; }
 }

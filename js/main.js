@@ -6,6 +6,9 @@
   /* ---------- entrada do hero ---------- */
   requestAnimationFrame(() => requestAnimationFrame(() => root.classList.add('is-loaded')));
 
+  /* ---------- faixas: duplica o conteúdo para o loop sem emenda ---------- */
+  document.querySelectorAll('[data-band]').forEach((t) => { t.innerHTML += t.innerHTML; });
+
   /* ---------- ano no rodapé ---------- */
   const year = document.querySelector('[data-year]');
   if (year) year.textContent = new Date().getFullYear();

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Troque SEU-DOMINIO.com.br pelo domínio real antes de enviar no Search Console -->
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
+  <url>
+    <loc>https://SEU-DOMINIO.com.br/</loc>
+    <lastmod>2026-11-18</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>1.0</priority>
+    <image:image>
+      <image:loc>https://SEU-DOMINIO.com.br/assets/img/dra-samanta-alinhador.jpg</image:loc>
+    </image:image>
+    <image:image>
+      <image:loc>https://SEU-DOMINIO.com.br/assets/img/dra-samanta-retrato.jpg</image:loc>
+    </image:image>
+    <image:image>
+      <image:loc>https://SEU-DOMINIO.com.br/assets/img/dra-samanta-consultorio.jpg</image:loc>
+    </image:image>
+  </url>
+</urlset>
