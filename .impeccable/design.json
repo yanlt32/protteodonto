@@ -1,0 +1,191 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-11-18T12:00:00Z",
+  "title": "Design System: Protte Odonto",
+  "extensions": {
+    "colorMeta": {
+      "ink": {
+        "role": "primary",
+        "displayName": "Protte ink"
+      },
+      "mark": {
+        "role": "accent",
+        "displayName": "Smile yellow"
+      },
+      "paper": {
+        "role": "neutral",
+        "displayName": "Clinical paper"
+      },
+      "sheet": {
+        "role": "neutral",
+        "displayName": "Sheet"
+      },
+      "stamp": {
+        "role": "tertiary",
+        "displayName": "Stamp ink"
+      },
+      "night": {
+        "role": "neutral",
+        "displayName": "Scan room"
+      }
+    },
+    "typographyMeta": {
+      "display": {
+        "displayName": "Display",
+        "purpose": "Hero headline in Cormorant Garamond, italic phrase highlighted."
+      },
+      "headline": {
+        "displayName": "Headline",
+        "purpose": "Section headings, italic for the phrase that matters."
+      },
+      "body": {
+        "displayName": "Body",
+        "purpose": "Manrope text."
+      },
+      "label": {
+        "displayName": "Label",
+        "purpose": "Table headers, card fields, captions, tooth numbers."
+      },
+      "wordmark": {
+        "displayName": "Wordmark",
+        "purpose": "PROTTE logotype in Manrope 800."
+      }
+    },
+    "shadows": [
+      {
+        "name": "photo",
+        "value": "0 40px 70px -45px rgba(18,32,59,.55)",
+        "purpose": "Hero arch and portrait."
+      },
+      {
+        "name": "card-on-desk",
+        "value": "0 0 0 .5px rgba(18,32,59,.1), 0 2px 4px rgba(18,32,59,.05), 0 34px 56px -30px rgba(18,32,59,.42)",
+        "purpose": "Appointment card."
+      }
+    ],
+    "motion": [
+      {
+        "name": "ease-out-expo",
+        "value": "cubic-bezier(.16, 1, .3, 1)",
+        "purpose": "Default for every transition."
+      },
+      {
+        "name": "ease-in-out",
+        "value": "cubic-bezier(.65, 0, .35, 1)",
+        "purpose": "Odontogram scan beam."
+      },
+      {
+        "name": "word-rise",
+        "value": "translateY(112%) rotate(5deg) to none, 1.1s, 55ms per word",
+        "purpose": "Headings on load and on scroll."
+      },
+      {
+        "name": "arch-reveal",
+        "value": "clip-path inset(100% 0 0 0) to inset(0), 1.5s",
+        "purpose": "Hero photo."
+      },
+      {
+        "name": "exam-sweep",
+        "value": "1.25s beam, 66ms per column",
+        "purpose": "Odontogram first view."
+      },
+      {
+        "name": "room",
+        "value": "scroll-driven clip-path inset with 48px radius to full bleed",
+        "purpose": "Dark aligner section."
+      },
+      {
+        "name": "stamp",
+        "value": "0.7s scale 1.6 to 1 with blur",
+        "purpose": "Carimbo landing."
+      }
+    ],
+    "breakpoints": [
+      {
+        "name": "stack-exam",
+        "value": "1120px"
+      },
+      {
+        "name": "tablet",
+        "value": "960px"
+      },
+      {
+        "name": "table-to-records",
+        "value": "680px"
+      },
+      {
+        "name": "phone",
+        "value": "480px"
+      }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "The one booking action: yellow pill with an ink circle holding the arrow.",
+      "html": "<a class=\"ds-btn-primary\" href=\"#\"><span>Agendar avaliação</span><span class=\"ds-btn-icon\"><svg viewBox=\"0 0 256 256\" width=\"18\" height=\"18\" fill=\"currentColor\"><path d=\"M221.66,133.66l-72,72a8,8,0,0,1-11.32-11.32L196.69,136H40a8,8,0,0,1,0-16H196.69L138.34,61.66a8,8,0,0,1,11.32-11.32l72,72A8,8,0,0,1,221.66,133.66Z\"/></svg></span></a>",
+      "css": ".ds-btn-primary { display: inline-flex; align-items: center; gap: .85rem; min-height: 56px; padding: .5rem .5rem .5rem 1.6rem; border-radius: 999px; background: #ffcc29; color: #12203b; font: 700 1rem/1.2 Manrope, system-ui, sans-serif; text-decoration: none; transition: background-color .3s, transform .5s cubic-bezier(.16,1,.3,1); } .ds-btn-icon { width: 40px; height: 40px; border-radius: 50%; display: grid; place-items: center; background: #12203b; color: #ffcc29; transition: transform .6s cubic-bezier(.16,1,.3,1); } .ds-btn-primary:hover { background: #ffd651; transform: translateY(-2px); } .ds-btn-primary:hover .ds-btn-icon { transform: translateX(4px); } .ds-btn-primary:active { transform: scale(.97); } .ds-btn-primary:focus-visible { outline: 2px solid #12203b; outline-offset: 3px; }"
+    },
+    {
+      "name": "Text Link",
+      "kind": "custom",
+      "description": "Secondary actions such as the SouSmile pre-evaluation.",
+      "html": "<a class=\"ds-link\" href=\"#\">Pré-avaliação virtual</a>",
+      "css": ".ds-link { display: inline-flex; padding-bottom: .2rem; color: #12203b; font: 700 1rem Manrope, system-ui, sans-serif; text-decoration: none; background: linear-gradient(currentColor, currentColor) 0 100% / 0% 1.5px no-repeat, linear-gradient(#b4c0d2, #b4c0d2) 0 100% / 100% 1.5px no-repeat; transition: background-size .6s cubic-bezier(.16,1,.3,1); } .ds-link:hover { background-size: 100% 1.5px, 100% 1.5px; } .ds-link:focus-visible { outline: 2px solid #12203b; outline-offset: 3px; }"
+    },
+    {
+      "name": "Carimbo",
+      "kind": "custom",
+      "refersTo": "stamp",
+      "description": "The credentials as a round dentist stamp (see index.html for the full SVG with text on a circular path).",
+      "html": "<div class=\"ds-stamp\"><svg viewBox=\"0 0 200 200\"><circle cx=\"100\" cy=\"100\" r=\"95\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"3\"/><circle cx=\"100\" cy=\"100\" r=\"89\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.2\"/><circle cx=\"100\" cy=\"100\" r=\"61\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.2\"/><text x=\"100\" y=\"96\" text-anchor=\"middle\" font-family=\"Cormorant Garamond, serif\" font-style=\"italic\" font-size=\"18\" fill=\"currentColor\">Ortodontia</text><path d=\"M82 114c10 9 26 9 36 0\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"3.2\" stroke-linecap=\"round\"/></svg></div>",
+      "css": ".ds-stamp { width: 172px; color: #1d3a7a; transform: rotate(-10deg); mix-blend-mode: multiply; }"
+    },
+    {
+      "name": "Appointment Card",
+      "kind": "card",
+      "refersTo": "appointment-card",
+      "description": "The booking block drawn as a return-appointment card.",
+      "html": "<div class=\"ds-appt\"><p class=\"ds-appt-title\">Próxima consulta</p><dl><div><dt>Paciente</dt><dd>Você</dd></div><div><dt>Data e horário</dt><dd class=\"ds-blank\">a combinar</dd></div></dl></div>",
+      "css": ".ds-appt { max-width: 400px; padding: 1.75rem; background: #fff; border-radius: 32px; box-shadow: 0 0 0 .5px rgba(18,32,59,.12), 0 2px 4px rgba(18,32,59,.06), 0 22px 40px -20px rgba(18,32,59,.38); font-family: Manrope, system-ui, sans-serif; color: #12203b; } .ds-appt-title { margin: 0; padding-bottom: 1rem; border-bottom: 1.5px solid #12203b; font-family: \"Cormorant Garamond\", serif; font-size: 1.85rem; font-weight: 600; } .ds-appt dl { margin: 0; } .ds-appt dl div { display: grid; grid-template-columns: 8rem 1fr; gap: 1rem; padding: .85rem 0; border-bottom: 1px dashed #b4c0d2; } .ds-appt dt { font-size: .8125rem; font-weight: 600; color: #5f6b84; } .ds-appt dd { margin: 0; font-weight: 600; } .ds-blank { color: #5f6b84; }"
+    }
+  ],
+  "narrative": {
+    "northStar": "A ficha ortodôntica",
+    "overview": "The specialist clinical record filled in for the visitor, drawn with soft edges: arch photo, rounded sheets, pills, anatomic teeth and a round carimbo, in Cormorant Garamond and Manrope with the uniform navy and the smile yellow.",
+    "keyCharacteristics": [
+      "Clinical paper ground",
+      "Cormorant Garamond headings with italic emphasis, Manrope text",
+      "No sharp corners",
+      "Yellow only for what matters now",
+      "One dark room that opens to full width"
+    ],
+    "rules": [
+      {
+        "name": "One yellow",
+        "body": "Yellow marks the line that matters, the primary button or a live state. It never decorates.",
+        "section": "colors"
+      },
+      {
+        "name": "No kickers",
+        "body": "Headings stand alone; labels belong to form fields.",
+        "section": "typography"
+      },
+      {
+        "name": "One dark room",
+        "body": "Only the aligner/3D section is dark.",
+        "section": "colors"
+      }
+    ],
+    "dos": [
+      "Do write in Dra. Samanta's first person.",
+      "Do keep one primary label: Agendar avaliação."
+    ],
+    "donts": [
+      "Don't add eyebrows, section numbers or cream backgrounds.",
+      "Don't invent testimonials, prices or contact data."
+    ]
+  }
+}

@@ -1,25 +1,89 @@
-/* Protte Odonto — interações */
+/* Protte Odonto: interações e movimento */
 (() => {
+  window.protteReady = true; // avisa a rede de segurança do <head> que o script rodou
   const root = document.documentElement;
   const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const hasIO = 'IntersectionObserver' in window;
 
-  /* ---------- entrada do hero ---------- */
-  requestAnimationFrame(() => requestAnimationFrame(() => root.classList.add('is-loaded')));
+  /* dispara uma vez quando o elemento entra na tela */
+  const onceVisible = (els, fn, options = { threshold: 0.35 }) => {
+    if (reduced || !hasIO) { els.forEach(fn); return; }
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach((en) => { if (en.isIntersecting) { fn(en.target); io.unobserve(en.target); } });
+    }, options);
+    els.forEach((el) => io.observe(el));
+  };
 
-  /* ---------- faixas: duplica o conteúdo para o loop sem emenda ---------- */
-  document.querySelectorAll('[data-band]').forEach((t) => { t.innerHTML += t.innerHTML; });
+  /* ---------- títulos: cada palavra num trilho próprio, para subir por trás de uma linha ---------- */
+  const splitWords = (el) => {
+    let i = 0;
+    const walk = (node) => {
+      [...node.childNodes].forEach((n) => {
+        if (n.nodeType === 1) { walk(n); return; }
+        if (n.nodeType !== 3 || !n.textContent.trim()) return;
+        const frag = document.createDocumentFragment();
+        n.textContent.split(/(\s+)/).forEach((part) => {
+          if (!part) return;
+          if (/^\s+$/.test(part)) { frag.append(' '); return; }
+          const outer = document.createElement('span');
+          const inner = document.createElement('span');
+          outer.className = 'w';
+          inner.className = 'w__i';
+          inner.style.setProperty('--wi', i++);
+          inner.textContent = part;
+          outer.append(inner);
+          frag.append(outer);
+        });
+        n.replaceWith(frag);
+      });
+    };
+    walk(el);
+    el.classList.add('is-split');
+    return i;
+  };
+  const splits = [...document.querySelectorAll('[data-split]')];
+  splits.forEach(splitWords);
+
+  /* ---------- abertura: espera a fonte para não animar com a fonte errada ---------- */
+  const heroTitle = document.querySelector('.hero__title');
+  const heroMark = document.querySelector('.hero [data-mark]');
+  const start = () => {
+    if (root.classList.contains('is-loaded')) return;
+    root.classList.add('is-loaded');
+    if (heroTitle) heroTitle.classList.add('is-in');
+    if (heroMark) setTimeout(() => heroMark.classList.add('is-marked'), reduced ? 0 : 1150);
+  };
+  if (document.fonts && document.fonts.ready) {
+    Promise.race([document.fonts.ready, new Promise((r) => setTimeout(r, 900))]).then(() => requestAnimationFrame(start));
+  } else {
+    requestAnimationFrame(start);
+  }
+
+  /* ---------- entradas ao rolar ---------- */
+  document.querySelectorAll('[data-reveal="rows"] tbody tr, [data-reveal="rows"] thead tr').forEach((tr) => {
+    tr.style.setProperty('--ri', tr.parentElement.tagName === 'THEAD' ? 0 : tr.sectionRowIndex + 1);
+  });
+  document.querySelectorAll('[data-reveal="stagger"]').forEach((group) => {
+    [...group.children].forEach((child, i) => child.style.setProperty('--ri', i));
+  });
+  onceVisible(
+    [...document.querySelectorAll('[data-reveal]'), ...splits.filter((s) => s !== heroTitle)],
+    (el) => el.classList.add('is-in'),
+    { threshold: 0.15, rootMargin: '0px 0px -8% 0px' }
+  );
 
   /* ---------- ano no rodapé ---------- */
   const year = document.querySelector('[data-year]');
   if (year) year.textContent = new Date().getFullYear();
 
-  /* ---------- header ao rolar ---------- */
+  /* ---------- cabeçalho: linha de base depois que a página rola ---------- */
   const header = document.querySelector('[data-header]');
-  const onScroll = () => header.classList.toggle('is-scrolled', window.scrollY > 24);
-  onScroll();
-  window.addEventListener('scroll', onScroll, { passive: true });
+  const top = document.querySelector('[data-top]');
+  if (header && top && hasIO) {
+    new IntersectionObserver(([en]) => header.classList.toggle('is-scrolled', !en.isIntersecting)).observe(top);
+  }
 
-  /* ---------- menu mobile ---------- */
+  /* ---------- menu do celular ---------- */
   const toggle = document.querySelector('[data-menu-toggle]');
   const menu = document.getElementById('menu');
   const setMenu = (open) => {
@@ -36,34 +100,160 @@
 
   /* ---------- link ativo no menu ---------- */
   const navLinks = [...document.querySelectorAll('.nav__list a[href^="#"]')];
-  const sections = navLinks.map((a) => document.querySelector(a.getAttribute('href'))).filter(Boolean);
-  const spy = new IntersectionObserver((entries) => {
-    entries.forEach((en) => {
-      if (!en.isIntersecting) return;
-      navLinks.forEach((a) => a.classList.toggle('is-active', a.getAttribute('href') === '#' + en.target.id));
-    });
-  }, { rootMargin: '-45% 0px -50% 0px' });
-  sections.forEach((s) => spy.observe(s));
-
-  /* ---------- reveal ao rolar ---------- */
-  const reveals = document.querySelectorAll('[data-reveal]');
-  if (reduced || !('IntersectionObserver' in window)) {
-    reveals.forEach((el) => el.classList.add('is-in'));
-  } else {
-    // escalonamento entre irmãos
-    reveals.forEach((el) => {
-      const sibs = [...el.parentElement.children].filter((c) => c.hasAttribute('data-reveal'));
-      el.style.setProperty('--d', `${Math.min(sibs.indexOf(el), 5) * 0.08}s`);
-    });
-    const io = new IntersectionObserver((entries) => {
+  if (hasIO) {
+    const spy = new IntersectionObserver((entries) => {
       entries.forEach((en) => {
-        if (en.isIntersecting) { en.target.classList.add('is-in'); io.unobserve(en.target); }
+        if (!en.isIntersecting) return;
+        navLinks.forEach((a) => a.classList.toggle('is-active', a.getAttribute('href') === '#' + en.target.id));
       });
-    }, { rootMargin: '0px 0px -10% 0px', threshold: 0.12 });
-    reveals.forEach((el) => io.observe(el));
+    }, { rootMargin: '-45% 0px -50% 0px' });
+    navLinks.map((a) => document.querySelector(a.getAttribute('href'))).filter(Boolean).forEach((s) => spy.observe(s));
   }
 
-  /* ---------- boca em SVG (gerada aqui para manter o HTML limpo) ---------- */
+  /* ---------- marca-texto: passa uma vez sobre a linha que importa ---------- */
+  const marks = [...document.querySelectorAll('[data-mark]')].filter((m) => m !== heroMark);
+  onceVisible(marks, (m) => setTimeout(() => m.classList.add('is-marked'), reduced ? 0 : 500), { threshold: 0.9 });
+
+  /* ---------- faixas cruzadas ("fly") ----------
+     Andam sozinhas devagar, aceleram com a velocidade da rolagem, trocam de sentido
+     quando a pessoa rola para cima e se inclinam um pouco na direção do movimento.
+     O laço só roda com as faixas na tela. */
+  const fly = document.querySelector('[data-fly]');
+  if (fly) {
+    const tracks = [...fly.querySelectorAll('[data-fly-track]')].map((el) => ({
+      el, dir: Number(el.dataset.dir) || -1, unit: el.innerHTML, x: 0, w: 1,
+    }));
+    // repete o bloco até cobrir a faixa inteira com folga, para o laço não ter emenda
+    const fill = () => tracks.forEach((t) => {
+      t.el.innerHTML = t.unit;
+      const first = t.el.firstElementChild;
+      t.w = first.getBoundingClientRect().width || 1;
+      const need = t.el.parentElement.getBoundingClientRect().width + t.w * 2;
+      let total = t.w;
+      while (total < need) { t.el.insertAdjacentHTML('beforeend', t.unit); total += t.w; }
+      t.x = -t.w * 0.37 * (t.dir > 0 ? 1 : 0.5);
+    });
+    fill();
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(fill);
+    if ('ResizeObserver' in window) {
+      let lastW = fly.offsetWidth;
+      new ResizeObserver(() => { if (Math.abs(fly.offsetWidth - lastW) > 2) { lastW = fly.offsetWidth; fill(); } }).observe(fly);
+    }
+
+    const place = (skew) => tracks.forEach((t) => {
+      t.x = ((t.x % t.w) + t.w) % t.w - t.w; // mantém entre -w e 0
+      t.el.style.transform = `translate3d(${t.x.toFixed(2)}px,0,0) skewX(${skew.toFixed(2)}deg)`;
+    });
+    place(0);
+
+    if (!reduced) {
+      let running = false, raf = 0, last = 0, lastY = window.scrollY;
+      let vel = 0, sense = 1, slow = 0, slowTarget = 0, skew = 0;
+      const BASE = 34; // px por segundo, parado
+      fly.addEventListener('pointerenter', (e) => { if (e.pointerType === 'mouse') slowTarget = 1; });
+      fly.addEventListener('pointerleave', () => { slowTarget = 0; });
+
+      const tick = (now) => {
+        const dt = Math.min(0.064, (now - (last || now)) / 1000) || 0.016;
+        last = now;
+        const y = window.scrollY;
+        const v = (y - lastY) / dt; // px/s da rolagem
+        lastY = y;
+        if (Math.abs(v) > 30) sense = Math.sign(v);
+        vel += (v - vel) * 0.1;
+        slow += (slowTarget - slow) * 0.08;
+        const speed = (BASE + Math.min(1400, Math.abs(vel)) * 0.55) * (1 - slow * 0.8) * sense;
+        tracks.forEach((t) => { t.x += t.dir * speed * dt; });
+        skew += (Math.max(-9, Math.min(9, -vel * 0.006)) - skew) * 0.12;
+        place(skew);
+        if (running) raf = requestAnimationFrame(tick);
+      };
+      if (hasIO) {
+        new IntersectionObserver(([en]) => {
+          running = en.isIntersecting;
+          if (running) { last = 0; lastY = window.scrollY; cancelAnimationFrame(raf); raf = requestAnimationFrame(tick); }
+          else cancelAnimationFrame(raf);
+        }).observe(fly);
+      }
+    }
+  }
+
+  /* ---------- carimbo ---------- */
+  onceVisible([...document.querySelectorAll('[data-stamp]')], (s) => s.classList.add('is-stamped'), { threshold: 0.8 });
+
+  /* ---------- odontograma ---------- */
+  const chart = document.querySelector('[data-chart]');
+  if (chart) {
+    const POS = { 1: 'incisivo central', 2: 'incisivo lateral', 3: 'canino', 4: 'primeiro pré-molar', 5: 'segundo pré-molar', 6: 'primeiro molar', 7: 'segundo molar', 8: 'terceiro molar' };
+    const QUAD = { 1: 'superior direito', 2: 'superior esquerdo', 3: 'inferior esquerdo', 4: 'inferior direito' };
+    const nameOf = (n) => {
+      const q = Math.floor(n / 10), d = n % 10;
+      return `${POS[d]} ${QUAD[q]}${d === 8 ? ' (siso)' : ''}`;
+    };
+    const rows = [...chart.querySelectorAll('.chart__arch')].map((arch) => [...arch.querySelectorAll('.tooth')]);
+    const teeth = rows.flat();
+    const readNum = chart.querySelector('[data-readout-num]');
+    const readText = chart.querySelector('[data-readout]');
+    const idle = readText.textContent;
+    let current = teeth.find((t) => t.dataset.n === '11') || teeth[0];
+
+    // o feixe do exame anda da esquerda para a direita: cada coluna acende quando ele passa
+    rows.forEach((row) => row.forEach((t, c) => t.style.setProperty('--c', c)));
+    const board = chart.querySelector('[data-chart-board]');
+    const sizeBoard = () => board.style.setProperty('--bw', `${board.offsetWidth}px`);
+    sizeBoard();
+    if ('ResizeObserver' in window) new ResizeObserver(sizeBoard).observe(board);
+
+    teeth.forEach((t) => {
+      const n = Number(t.dataset.n);
+      t.setAttribute('aria-label', `Dente ${n}, ${nameOf(n)}`);
+      t.setAttribute('aria-pressed', 'false');
+      t.tabIndex = t === current ? 0 : -1;
+    });
+
+    const show = (t) => {
+      const name = nameOf(Number(t.dataset.n));
+      readNum.textContent = t.dataset.n;
+      readText.textContent = name.charAt(0).toUpperCase() + name.slice(1);
+    };
+    const reset = () => {
+      const picked = teeth.find((t) => t.getAttribute('aria-pressed') === 'true');
+      if (picked) show(picked); else { readNum.textContent = ''; readText.textContent = idle; }
+    };
+    const pick = (t) => {
+      teeth.forEach((o) => o.setAttribute('aria-pressed', String(o === t)));
+      show(t);
+    };
+    const focusTooth = (t) => {
+      current.tabIndex = -1; current = t; t.tabIndex = 0; t.focus();
+    };
+
+    teeth.forEach((t) => {
+      t.addEventListener('click', () => { pick(t); current.tabIndex = -1; current = t; t.tabIndex = 0; });
+      t.addEventListener('pointerenter', (e) => { if (e.pointerType === 'mouse') show(t); });
+      t.addEventListener('pointerleave', (e) => { if (e.pointerType === 'mouse') reset(); });
+      t.addEventListener('focus', () => show(t));
+      t.addEventListener('blur', reset);
+    });
+
+    // setas percorrem a ficha como ela é lida: linha de cima e linha de baixo
+    chart.addEventListener('keydown', (e) => {
+      const r = rows.findIndex((row) => row.includes(current));
+      if (r < 0) return;
+      const c = rows[r].indexOf(current);
+      let next = null;
+      if (e.key === 'ArrowRight') next = rows[r][Math.min(c + 1, rows[r].length - 1)];
+      if (e.key === 'ArrowLeft') next = rows[r][Math.max(c - 1, 0)];
+      if (e.key === 'ArrowDown' || e.key === 'ArrowUp') next = rows[e.key === 'ArrowDown' ? 1 : 0][c];
+      if (e.key === 'Home') next = rows[r][0];
+      if (e.key === 'End') next = rows[r][rows[r].length - 1];
+      if (next) { e.preventDefault(); focusTooth(next); }
+    });
+
+    onceVisible([chart], (c) => c.classList.add('is-examined'), { threshold: 0.5 });
+  }
+
+  /* ---------- arcada em SVG (reserva caso o 3D não carregue) ---------- */
   const buildMouth = (svg) => {
     const id = 'm' + Math.random().toString(36).slice(2, 7);
     const gumU = (x) => 90 + ((x - 200) / 150) ** 2 * 26;   // linha da gengiva de cima
@@ -75,10 +265,10 @@
       const left = right.map((t) => ({ x: 400 - t.x - t.w, w: t.w, k: t.k })).reverse();
       return [...left, ...right];
     };
-    // largura/altura do centro para fora (incisivo, lateral, canino, pré-molares)
+    // largura e altura do centro para fora (incisivo, lateral, canino, pré-molares)
     const U = row([30, 25, 23, 21, 18]), uH = [40, 34, 37, 29, 25];
     const L = row([21, 21, 22, 21, 19]), lH = [28, 29, 31, 27, 23];
-    // desalinhamento inicial de cada dente (esquerda → direita)
+    // desalinhamento inicial de cada dente (da esquerda para a direita)
     const uR = [5, -7, 4, -9, 6, -5, 8, -4, 7, -5], uY = [2, -3, 4, -2, 3, -4, 2, 5, -3, 2], uX = [1, -2, 2, -1, 0, 0, 1, -2, 2, -1];
     const lR = [-6, 5, -8, 6, -4, 7, -5, 9, -6, 4], lY = [-2, 3, -4, 2, -3, 4, -2, 3, -3, 2], lX = [1, -1, 2, -2, 1, -1, 2, -1, 1, -2];
 
@@ -107,7 +297,7 @@
         <linearGradient id="${id}-t" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fffdf8"/><stop offset="1" stop-color="#ece2cf"/></linearGradient>
         <linearGradient id="${id}-l" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#d9858a"/><stop offset=".5" stop-color="#c4646c"/><stop offset="1" stop-color="#a64952"/></linearGradient>
         <radialGradient id="${id}-cav" cx=".5" cy=".45" r=".6"><stop offset="0" stop-color="#6a1a26"/><stop offset="1" stop-color="#2b0910"/></radialGradient>
-        <linearGradient id="${id}-scan" x1="0" x2="1"><stop offset="0" stop-color="#e8b44f" stop-opacity="0"/><stop offset=".5" stop-color="#ffe3a3" stop-opacity=".85"/><stop offset="1" stop-color="#e8b44f" stop-opacity="0"/></linearGradient>
+        <linearGradient id="${id}-scan" x1="0" x2="1"><stop offset="0" stop-color="#ffcc29" stop-opacity="0"/><stop offset=".5" stop-color="#ffe7a0" stop-opacity=".85"/><stop offset="1" stop-color="#ffcc29" stop-opacity="0"/></linearGradient>
         <linearGradient id="${id}-sh" x1="0" x2="1"><stop offset="0" stop-color="#fff" stop-opacity="0"/><stop offset=".5" stop-color="#fff" stop-opacity=".8"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient>
       </defs>
       <g class="mouth__body">
@@ -134,51 +324,50 @@
   };
   document.querySelectorAll('[data-mouth]').forEach(buildMouth);
 
-  /* ---------- etapas + boca que se alinha com a rolagem ---------- */
+  /* ---------- etapas + arcada que se alinha com a rolagem ---------- */
   const steps = document.querySelector('[data-steps]');
   const stage = document.querySelector('[data-mouth-stage]');
+  const label = stage && stage.querySelector('[data-mouth-label]');
   const clamp01 = (n) => Math.min(1, Math.max(0, n));
   const ease = (t) => (t < 0.5 ? 2 * t * t : 1 - (-2 * t + 2) ** 2 / 2);
   const stageNames = ['Avaliação', 'Escaneamento', 'Uso das placas', 'Contenção'];
-  /* p vai de 0 a 1 e é dividido por etapa: cada etapa ocupa 1/3 do trajeto entre o
-     ponto da Etapa 1 e o da Etapa 4 (calculado pela posição real de cada etapa na tela).
-       Etapa 1 (0 → 1/3): avaliação, dentes desalinhados
-       Etapa 2 (1/3 → 2/3): escaneamento, a linha dourada varre os dentes
-       Etapa 3 (2/3 → 1): alinhador aparece e os dentes vão para o lugar
+  const stageIndex = (p) => (p >= 0.995 ? 3 : Math.min(2, Math.floor(p * 3)));
+  /* p vai de 0 a 1; cada etapa ocupa 1/3 do trajeto entre a Etapa 1 e a Etapa 4:
+       Etapa 1 (0 a 1/3): avaliação, dentes desalinhados
+       Etapa 2 (1/3 a 2/3): escaneamento, o feixe amarelo percorre os dentes
+       Etapa 3 (2/3 a 1): o alinhador aparece e os dentes vão para o lugar
        Etapa 4 (p = 1): contenção, sem alinhador, dentes alinhados */
   const updateMouth = (p) => {
     if (!stage) return;
     const phase = p * 3;
     const scan = phase >= 1 && phase < 2 ? phase - 1 : phase >= 2 ? 1 : 0;
-    const f = clamp01(phase - 2);                        // progresso dentro da etapa 3
-    const s = ease(clamp01((f - 0.08) / 0.8));           // alinhamento progressivo
-    let al = 0;                                          // alinhador durante o uso das placas
+    const f = clamp01(phase - 2);
+    const s = ease(clamp01((f - 0.08) / 0.8));
+    let al = 0;
     if (phase >= 2 && p < 0.995) al = f < 0.1 ? f / 0.1 : f > 0.9 ? Math.max(0, (1 - f) / 0.1) : 1;
+    const done = p >= 0.995;
     stage.style.setProperty('--s', s.toFixed(3));
     stage.style.setProperty('--al', al.toFixed(3));
     stage.style.setProperty('--scan', scan.toFixed(3));
     stage.style.setProperty('--so', scan > 0 && scan < 1 ? '1' : '0');
-    const done = p >= 0.995;
+    stage.style.setProperty('--sp', done ? '1' : '0');
     // estado lido pela versão 3D (js/mouth3d.js)
     stage._mouth = { p, s, al, scan, scanOn: scan > 0 && scan < 1, done };
-    stage.style.setProperty('--sp', done ? '1' : '0');
-    if (done) stage.setAttribute('data-mouth-done', ''); else stage.removeAttribute('data-mouth-done');
-    stage.querySelector('[data-mouth-label]').textContent = stageNames[stageIndex(p)];
-    stage.querySelector('[data-mouth-pct]').textContent = Math.round(s * 100);
+    stage.toggleAttribute('data-mouth-done', done);
+    if (label) label.textContent = stageNames[stageIndex(p)];
   };
-  const stageIndex = (p) => (p >= 0.995 ? 3 : Math.min(2, Math.floor(p * 3)));
-  const mobileQ = window.matchMedia('(max-width: 900px)');
+  const mobileQ = window.matchMedia('(max-width: 960px)');
 
   if (steps) {
     const items = [...steps.querySelectorAll('.step')];
     let ticking = false;
     const update = () => {
       ticking = false;
-      // linha de leitura: logo abaixo da boca presa no topo (celular) ou a 45% da tela (desktop)
+      // linha de leitura: logo abaixo da arcada presa no topo (celular) ou a 45% da tela
       const mark = mobileQ.matches && stage
         ? stage.getBoundingClientRect().bottom + 40
         : window.innerHeight * 0.45;
-      // progresso por trechos: cada etapa conta igual, não importa a altura do texto
+      // cada etapa conta igual, não importa a altura do texto
       const tops = items.map((it) => it.getBoundingClientRect().top);
       const first = tops[0], n = tops.length;
       let p = 0;
@@ -188,107 +377,18 @@
         while (i < n - 2 && mark >= tops[i + 1]) i++;
         p = (i + clamp01((mark - tops[i]) / Math.max(1, tops[i + 1] - tops[i]))) / (n - 1);
       }
-      // etapa ativa, linha dourada e boca usam o mesmo progresso
       const idx = stageIndex(p);
       steps.style.setProperty('--fill', p.toFixed(3));
       items.forEach((it, i) => it.classList.toggle('is-active', mark > first && i <= idx));
       updateMouth(p);
     };
+    // a arcada é animada pela rolagem (scrub), então o progresso é lido a cada quadro com rAF
     window.addEventListener('scroll', () => { if (!ticking) { ticking = true; requestAnimationFrame(update); } }, { passive: true });
     window.addEventListener('resize', update);
     update();
   }
 
-  /* ---------- carrossel ---------- */
-  document.querySelectorAll('[data-carousel]').forEach((car) => {
-    const section = car.closest('section');
-    const track = car.querySelector('[data-track]');
-    const slides = [...track.children];
-    const prev = section.querySelector('[data-prev]');
-    const next = section.querySelector('[data-next]');
-    const bar = section.querySelector('[data-progress]');
-    const count = section.querySelector('[data-current]');
-    let index = 0;
-
-    const step = () => slides[1] ? slides[1].offsetLeft - slides[0].offsetLeft : track.clientWidth;
-    const maxScroll = () => track.scrollWidth - track.clientWidth;
-
-    const goTo = (i) => {
-      i = Math.max(0, Math.min(slides.length - 1, i));
-      track.scrollTo({ left: Math.min(i * step(), maxScroll()), behavior: reduced ? 'auto' : 'smooth' });
-    };
-
-    const sync = () => {
-      const atEnd = track.scrollLeft >= maxScroll() - 4;
-      index = atEnd ? slides.length - 1 : Math.round(track.scrollLeft / step());
-      slides.forEach((s, i) => s.classList.toggle('is-current', i === index));
-      if (count) count.textContent = String(index + 1).padStart(2, '0');
-      if (bar) bar.style.width = `${((index + 1) / slides.length) * 100}%`;
-      if (prev) prev.disabled = track.scrollLeft <= 4;
-      if (next) next.disabled = atEnd;
-    };
-
-    let raf;
-    track.addEventListener('scroll', () => { cancelAnimationFrame(raf); raf = requestAnimationFrame(sync); }, { passive: true });
-    window.addEventListener('resize', sync);
-    prev && prev.addEventListener('click', () => goTo(index - 1));
-    next && next.addEventListener('click', () => goTo(index + 1));
-
-    // teclado
-    track.setAttribute('tabindex', '0');
-    track.addEventListener('keydown', (e) => {
-      if (e.key === 'ArrowRight') { e.preventDefault(); goTo(index + 1); }
-      if (e.key === 'ArrowLeft') { e.preventDefault(); goTo(index - 1); }
-    });
-
-    // arrastar com o mouse (toque já é nativo)
-    let down = false, startX = 0, startLeft = 0, moved = false;
-    track.addEventListener('pointerdown', (e) => {
-      if (e.pointerType !== 'mouse' || e.button !== 0) return;
-      down = true; moved = false; startX = e.clientX; startLeft = track.scrollLeft;
-    });
-    window.addEventListener('pointermove', (e) => {
-      if (!down) return;
-      const dx = e.clientX - startX;
-      if (!moved && Math.abs(dx) > 5) { moved = true; track.classList.add('is-dragging'); }
-      if (moved) track.scrollLeft = startLeft - dx;
-    });
-    window.addEventListener('pointerup', () => {
-      if (!down) return;
-      down = false;
-      if (moved) {
-        track.classList.remove('is-dragging');
-        goTo(Math.round(track.scrollLeft / step()));
-      }
-    });
-    track.addEventListener('click', (e) => { if (moved) { e.preventDefault(); e.stopPropagation(); moved = false; } }, true);
-
-    // autoplay suave: avança a cada 5s, pausa com mouse, foco, toque ou aba oculta
-    let timer = null, paused = false;
-    const play = () => {
-      if (reduced) return;
-      stop();
-      timer = setInterval(() => {
-        if (paused || document.hidden) return;
-        const r = car.getBoundingClientRect();
-        if (r.bottom < 0 || r.top > window.innerHeight) return;
-        goTo(index >= slides.length - 1 ? 0 : index + 1);
-      }, 5000);
-    };
-    const stop = () => { clearInterval(timer); timer = null; };
-    [section].forEach((el) => {
-      el.addEventListener('mouseenter', () => (paused = true));
-      el.addEventListener('mouseleave', () => (paused = false));
-      el.addEventListener('focusin', () => (paused = true));
-      el.addEventListener('focusout', () => (paused = false));
-    });
-    track.addEventListener('touchstart', () => { paused = true; stop(); }, { passive: true });
-
-    sync();
-    play();
-  });
-
-  /* ---------- FAQ: abre um por vez ---------- */
+  /* ---------- dúvidas: uma aberta por vez ---------- */
   const qas = document.querySelectorAll('.qa');
   qas.forEach((d) => d.addEventListener('toggle', () => {
     if (d.open) qas.forEach((o) => { if (o !== d) o.open = false; });
