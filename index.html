@@ -1,0 +1,392 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Protte Odonto · Ortodontia e alinhadores no Tatuapé</title>
+  <meta name="description" content="Dra. Samanta Protte, especialista em Ortodontia no Tatuapé, São Paulo. Alinhadores invisíveis, aparelho ortodôntico e preparo para cirurgia ortognática.">
+  <meta name="theme-color" content="#14233f">
+  <meta property="og:title" content="Protte Odonto · Ortodontia no Tatuapé">
+  <meta property="og:description" content="Alinhadores invisíveis e ortodontia com a Dra. Samanta Protte, especialista em Ortodontia.">
+  <meta property="og:image" content="assets/img/dra-samanta-alinhador.jpg">
+  <meta property="og:locale" content="pt_BR">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%2314233f'/%3E%3Cpath d='M18 30c4 10 24 10 28 0' stroke='%23e8b44f' stroke-width='6' fill='none' stroke-linecap='round'/%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500;1,600&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+  <script>document.documentElement.classList.add('js')</script>
+  <!-- boca 3D (Three.js): o import map permite carregar os módulos até abrindo o arquivo direto -->
+  <script type="importmap">
+    { "imports": {
+      "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+      "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+    } }
+  </script>
+</head>
+<body>
+  <a class="skip" href="#conteudo">Pular para o conteúdo</a>
+
+  <!-- ===== Header ===== -->
+  <header class="header" data-header>
+    <div class="wrap header__inner">
+      <a class="logo" href="#topo" aria-label="Protte Odonto, início">
+        <span class="logo__word">PR<span class="logo__o">O<svg class="logo__smile" viewBox="0 0 40 16" aria-hidden="true"><path d="M3 3c6 11 28 11 34 0"/></svg></span>TTE</span>
+        <span class="logo__sub">odontologia</span>
+      </a>
+
+      <nav class="nav" aria-label="Principal">
+        <button class="nav__toggle" aria-expanded="false" aria-controls="menu" data-menu-toggle>
+          <span class="sr-only">Abrir menu</span>
+          <span class="nav__bars" aria-hidden="true"></span>
+        </button>
+        <ul class="nav__list" id="menu">
+          <li><a href="#tratamentos">Tratamentos</a></li>
+          <li><a href="#alinhadores">Alinhadores</a></li>
+          <li><a href="#doutora">A doutora</a></li>
+          <li><a href="#duvidas">Dúvidas</a></li>
+          <li><a href="#contato">Contato</a></li>
+          <li class="nav__cta"><a class="btn btn--primary btn--sm" href="https://linktr.ee/protteodonto" target="_blank" rel="noopener">Agendar avaliação</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main id="conteudo">
+    <!-- ===== Hero ===== -->
+    <section class="hero" id="topo">
+      <div class="wrap hero__grid">
+        <div class="hero__copy">
+          <p class="eyebrow" data-enter>Ortodontia · Tatuapé, São Paulo</p>
+          <h1 class="hero__title" data-enter>
+            Seu sorriso alinhado,<br>
+            <em>com quem é especialista.</em>
+          </h1>
+          <p class="hero__lead" data-enter>
+            Sou a Dra. Samanta Protte, especialista em Ortodontia. Planejo cada tratamento,
+            de alinhadores invisíveis ao preparo para cirurgia ortognática, e acompanho
+            você em todas as consultas.
+          </p>
+          <div class="hero__actions" data-enter>
+            <a class="btn btn--primary" href="https://linktr.ee/protteodonto" target="_blank" rel="noopener">
+              Agendar avaliação
+              <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M5 10h10M11 6l4 4-4 4"/></svg>
+            </a>
+            <a class="btn btn--ghost" href="https://www.sousmile.com/agenda/?leadProfile=PAV&amp;parceiro_origem=SouPr%C3%B3-VilaGomesCardim-SP(SamantaMoreiraProtte)&amp;store_id=864&amp;storeId=" target="_blank" rel="noopener">Pré-avaliação virtual</a>
+          </div>
+          <ul class="hero__facts" data-enter>
+            <li><strong>Especialista</strong><span>em Ortodontia</span></li>
+            <li><strong>Referência</strong><span>em alinhadores SouSmile</span></li>
+            <li><strong>Tatuapé</strong><span>Zona Leste de SP</span></li>
+          </ul>
+        </div>
+
+        <figure class="hero__media" data-enter>
+          <div class="arch">
+            <img src="assets/img/dra-samanta-alinhador.jpg" width="1080" height="1080"
+                 alt="Dra. Samanta Protte sorrindo e segurando um alinhador transparente">
+          </div>
+          <div class="badge-float" aria-hidden="true">
+            <span class="badge-float__icon">
+              <svg viewBox="0 0 24 24"><path d="M4 9c0-3 2-5 5-5 1.5 0 2 .8 3 .8S13.5 4 15 4c3 0 5 2 5 5 0 4-2 11-4 11-1.6 0-1.6-5-4-5s-2.4 5-4 5c-2 0-4-7-4-11Z"/></svg>
+            </span>
+            <span><strong>Alinhadores</strong><br>invisíveis e removíveis</span>
+          </div>
+          <svg class="hero__arc" viewBox="0 0 600 220" aria-hidden="true"><path d="M20 20c80 230 480 230 560 0"/></svg>
+        </figure>
+      </div>
+    </section>
+
+    <!-- ===== Faixa ===== -->
+    <div class="ticker" aria-hidden="true">
+      <div class="ticker__track">
+        <span>Alinhadores invisíveis</span><i></i><span>Aparelho ortodôntico</span><i></i><span>Preparo ortognático</span><i></i><span>Planejamento digital</span><i></i><span>Contenção</span><i></i>
+        <span>Alinhadores invisíveis</span><i></i><span>Aparelho ortodôntico</span><i></i><span>Preparo ortognático</span><i></i><span>Planejamento digital</span><i></i><span>Contenção</span><i></i>
+      </div>
+    </div>
+
+    <!-- ===== Tratamentos (carrossel) ===== -->
+    <section class="section" id="tratamentos" aria-labelledby="trat-title">
+      <div class="wrap">
+        <div class="section__head section__head--split">
+          <div>
+            <p class="eyebrow" data-reveal>Tratamentos</p>
+            <h2 id="trat-title" class="h2" data-reveal>Ortodontia completa, <em>do primeiro escaneamento à contenção.</em></h2>
+          </div>
+          <div class="carousel__controls" data-reveal>
+            <button class="icon-btn" data-prev aria-label="Tratamento anterior">
+              <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M12 5l-5 5 5 5"/></svg>
+            </button>
+            <button class="icon-btn" data-next aria-label="Próximo tratamento">
+              <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M8 5l5 5-5 5"/></svg>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="carousel" data-carousel aria-roledescription="carrossel" aria-label="Tratamentos">
+        <ul class="carousel__track" data-track>
+          <li class="tcard" aria-roledescription="slide" aria-label="1 de 5">
+            <span class="tcard__num">01</span>
+            <span class="tcard__icon"><svg viewBox="0 0 32 32" aria-hidden="true"><path d="M6 13c0-4 3-7 7-7 2 0 2.4 1 3 1s1-1 3-1c4 0 7 3 7 7 0 5-3 13-5.5 13-2 0-2-6-4.5-6s-2.5 6-4.5 6C9 26 6 18 6 13Z"/><path d="M11 12c1.5 1 3 1.4 5 1.4s3.5-.4 5-1.4" opacity=".55"/></svg></span>
+            <h3>Alinhadores invisíveis</h3>
+            <p>Placas transparentes trocadas a cada etapa. Você tira para comer e escovar, e quase ninguém percebe que está em tratamento.</p>
+            <a class="tcard__link" href="#alinhadores">Como funciona <span aria-hidden="true">→</span></a>
+          </li>
+          <li class="tcard" aria-roledescription="slide" aria-label="2 de 5">
+            <span class="tcard__num">02</span>
+            <span class="tcard__icon"><svg viewBox="0 0 32 32" aria-hidden="true"><rect x="4" y="12" width="6" height="8" rx="1.5"/><rect x="13" y="12" width="6" height="8" rx="1.5"/><rect x="22" y="12" width="6" height="8" rx="1.5"/><path d="M2 16h28"/></svg></span>
+            <h3>Aparelho ortodôntico</h3>
+            <p>Aparelho fixo, metálico ou estético, indicado quando o caso pede mais controle sobre cada dente.</p>
+            <a class="tcard__link" href="https://linktr.ee/protteodonto" target="_blank" rel="noopener">Agendar avaliação <span aria-hidden="true">→</span></a>
+          </li>
+          <li class="tcard" aria-roledescription="slide" aria-label="3 de 5">
+            <span class="tcard__num">03</span>
+            <span class="tcard__icon"><svg viewBox="0 0 32 32" aria-hidden="true"><path d="M8 6c-3 4-3 12 1 17 3 3.5 7 4 11 3"/><path d="M20 26c3-1 5-3 6-6"/><path d="M14 13h8M18 9v8"/></svg></span>
+            <h3>Preparo para cirurgia ortognática</h3>
+            <p>Alinho os dentes antes e depois da cirurgia, trabalhando junto com o cirurgião bucomaxilofacial para que a mordida encaixe no final.</p>
+            <a class="tcard__link" href="https://linktr.ee/protteodonto" target="_blank" rel="noopener">Agendar avaliação <span aria-hidden="true">→</span></a>
+          </li>
+          <li class="tcard" aria-roledescription="slide" aria-label="4 de 5">
+            <span class="tcard__num">04</span>
+            <span class="tcard__icon"><svg viewBox="0 0 32 32" aria-hidden="true"><rect x="4" y="6" width="24" height="16" rx="2.5"/><path d="M12 27h8M16 22v5"/><path d="M10 16c2 3 10 3 12 0" /></svg></span>
+            <h3>Planejamento digital</h3>
+            <p>Escaneamento e simulação do resultado antes de começar. Você vê o movimento previsto e o tempo estimado do tratamento.</p>
+            <a class="tcard__link" href="#alinhadores">Ver as etapas <span aria-hidden="true">→</span></a>
+          </li>
+          <li class="tcard" aria-roledescription="slide" aria-label="5 de 5">
+            <span class="tcard__num">05</span>
+            <span class="tcard__icon"><svg viewBox="0 0 32 32" aria-hidden="true"><path d="M16 4l10 4v7c0 7-4.5 11-10 13-5.5-2-10-6-10-13V8l10-4Z"/><path d="M11.5 16l3 3 6-6"/></svg></span>
+            <h3>Contenção e acompanhamento</h3>
+            <p>Depois do tratamento, a contenção mantém os dentes no lugar. As consultas de revisão garantem que o sorriso continue alinhado.</p>
+            <a class="tcard__link" href="#duvidas">Tirar dúvidas <span aria-hidden="true">→</span></a>
+          </li>
+        </ul>
+      </div>
+
+      <div class="wrap">
+        <div class="carousel__foot">
+          <div class="carousel__progress" aria-hidden="true"><span data-progress></span></div>
+          <p class="carousel__count" aria-live="polite"><span data-current>01</span> / 05</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== Alinhadores ===== -->
+    <section class="section section--navy" id="alinhadores" aria-labelledby="alin-title">
+      <div class="wrap alin">
+        <div class="alin__aside">
+          <div class="alin__intro">
+            <p class="eyebrow eyebrow--gold" data-reveal>Alinhadores invisíveis</p>
+            <h2 id="alin-title" class="h2" data-reveal>Do escaneamento ao <em>sorriso alinhado</em>, em quatro etapas.</h2>
+            <p class="alin__lead" data-reveal>
+              Sou referência em alinhadores SouSmile. Você recebe as placas, troca de etapa
+              em casa e volta ao consultório para eu acompanhar cada movimento.
+            </p>
+            <div class="alin__cta" data-reveal>
+              <a class="btn btn--gold" href="https://www.sousmile.com/agenda/?leadProfile=PAV&amp;parceiro_origem=SouPr%C3%B3-VilaGomesCardim-SP(SamantaMoreiraProtte)&amp;store_id=864&amp;storeId=" target="_blank" rel="noopener">
+                Fazer pré-avaliação virtual
+                <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M5 10h10M11 6l4 4-4 4"/></svg>
+              </a>
+              <p class="alin__cta-note">Pela plataforma SouSmile, direto do celular.</p>
+            </div>
+          </div>
+
+          <!-- boca animada: os dentes se alinham conforme a rolagem pelas etapas -->
+          <figure class="mouth-stage" data-mouth-stage>
+            <div class="mouth-stage__skin" data-mouth-3d>
+              <!-- reserva em SVG: some quando a versão 3D (js/mouth3d.js) carrega -->
+              <svg class="mouth" data-mouth="scroll" viewBox="0 0 400 230" aria-hidden="true"></svg>
+            </div>
+            <figcaption class="mouth-stage__cap">
+              <span class="mouth-stage__label" data-mouth-label>Avaliação</span>
+              <span class="mouth-stage__pct"><b data-mouth-pct>0</b>% alinhado</span>
+              <span class="mouth-stage__bar" aria-hidden="true"><i data-mouth-bar></i></span>
+            </figcaption>
+          </figure>
+        </div>
+
+        <ol class="steps" data-steps>
+          <li class="step" data-reveal>
+            <span class="step__dot" aria-hidden="true"></span>
+            <p class="step__k">Etapa 1</p>
+            <h3>Avaliação</h3>
+            <p>Conversamos sobre o que incomoda no seu sorriso. Eu examino mordida, gengiva e articulação e digo se o alinhador é indicado para o seu caso.</p>
+          </li>
+          <li class="step" data-reveal>
+            <span class="step__dot" aria-hidden="true"></span>
+            <p class="step__k">Etapa 2</p>
+            <h3>Escaneamento e planejamento</h3>
+            <p>Um escaneamento digital substitui a moldagem com massa. A partir dele eu planejo cada movimento e mostro a simulação do resultado.</p>
+          </li>
+          <li class="step" data-reveal>
+            <span class="step__dot" aria-hidden="true"></span>
+            <p class="step__k">Etapa 3</p>
+            <h3>Uso das placas</h3>
+            <p>Você usa os alinhadores cerca de 22 horas por dia e troca de placa conforme o planejamento, com revisões periódicas no consultório.</p>
+          </li>
+          <li class="step" data-reveal>
+            <span class="step__dot" aria-hidden="true"></span>
+            <p class="step__k">Etapa 4</p>
+            <h3>Contenção</h3>
+            <p>Com os dentes na posição final, a contenção mantém o resultado. Seguimos com consultas de acompanhamento.</p>
+          </li>
+        </ol>
+      </div>
+    </section>
+
+    <!-- ===== A doutora ===== -->
+    <section class="section" id="doutora" aria-labelledby="dra-title">
+      <div class="wrap dra">
+        <figure class="dra__photo" data-reveal>
+          <div class="dra__frame">
+            <img src="assets/img/dra-samanta-retrato.jpg" width="590" height="732" loading="lazy"
+                 alt="Dra. Samanta Protte de braços cruzados, com o uniforme azul-marinho da Protte Odonto">
+          </div>
+          <figcaption class="dra__sign">Dra. Samanta Protte</figcaption>
+        </figure>
+
+        <div class="dra__copy">
+          <p class="eyebrow" data-reveal>A doutora</p>
+          <h2 id="dra-title" class="h2" data-reveal>Ortodontia é <em>o que eu faço</em> todos os dias.</h2>
+          <p data-reveal>
+            Sou especialista em Ortodontia e atendo no Tatuapé, na Zona Leste de São Paulo.
+            No consultório da Protte Odonto, eu mesma faço o planejamento de cada caso e
+            acompanho o paciente do primeiro escaneamento até a contenção.
+          </p>
+          <p data-reveal>
+            Trabalho com alinhadores invisíveis, aparelhos ortodônticos e preparo para
+            cirurgia ortognática, sempre explicando com clareza o que vamos fazer e por quê.
+          </p>
+
+          <dl class="creds" data-reveal>
+            <div><dt>Especialidade</dt><dd>Ortodontia</dd></div>
+            <div><dt>Alinhadores</dt><dd>Referência SouSmile</dd></div>
+            <div><dt>Cirurgia</dt><dd>Preparo ortognático</dd></div>
+            <div><dt>Registro</dt><dd>RT CROSP 114427 · CRO CL 02289</dd></div>
+          </dl>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== Instagram ===== -->
+    <section class="section section--cream social" id="consultorio" aria-labelledby="social-title">
+      <div class="wrap social__grid">
+        <figure class="social__photo" data-reveal>
+          <div class="social__frame">
+            <img src="assets/img/dra-samanta-consultorio.jpg" width="450" height="595" loading="lazy"
+                 alt="Dra. Samanta Protte no consultório mostrando, num tablet, a foto de um sorriso alinhado">
+          </div>
+          <a class="social__tag" href="https://www.instagram.com/protteodonto/" target="_blank" rel="noopener">
+            <span class="social__tag-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" class="dot"/></svg></span>
+            <span><strong>@protteodonto</strong><br>no Instagram</span>
+          </a>
+        </figure>
+
+        <div class="social__copy">
+          <p class="eyebrow" data-reveal>No consultório e no Instagram</p>
+          <h2 id="social-title" class="h2" data-reveal>Acompanhe os sorrisos <em>de perto.</em></h2>
+          <p data-reveal>
+            No Instagram estão os relatos de pacientes, o consultório por dentro e os bastidores
+            dos tratamentos, nos destaques Nosso espaço, Feedbacks, SouSmile e Serviços.
+          </p>
+          <div class="social__actions" data-reveal>
+            <a class="btn btn--primary" href="https://www.instagram.com/protteodonto/" target="_blank" rel="noopener">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/></svg>
+              Ver @protteodonto
+            </a>
+            <a class="btn btn--ghost" href="https://www.sousmile.com/agenda/?leadProfile=PAV&amp;parceiro_origem=SouPr%C3%B3-VilaGomesCardim-SP(SamantaMoreiraProtte)&amp;store_id=864&amp;storeId=" target="_blank" rel="noopener">Pré-avaliação virtual</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== Dúvidas ===== -->
+    <section class="section" id="duvidas" aria-labelledby="faq-title">
+      <div class="wrap faq">
+        <div class="faq__head">
+          <p class="eyebrow" data-reveal>Dúvidas frequentes</p>
+          <h2 id="faq-title" class="h2" data-reveal>Antes de <em>começar</em>.</h2>
+          <p class="muted" data-reveal>Não encontrou sua dúvida? Mande uma mensagem pelo Instagram ou pelo link de agendamento.</p>
+        </div>
+        <div class="faq__list">
+          <details class="qa" data-reveal>
+            <summary>Alinhador invisível serve para qualquer caso?<span class="qa__icon" aria-hidden="true"></span></summary>
+            <div class="qa__body"><p>Funciona para boa parte dos casos de dentes tortos, espaçados ou apinhados, mas não para todos. Na avaliação eu examino a mordida e digo se ele é a melhor opção para você ou se o aparelho fixo atende melhor.</p></div>
+          </details>
+          <details class="qa" data-reveal>
+            <summary>Como funciona a pré-avaliação virtual?<span class="qa__icon" aria-hidden="true"></span></summary>
+            <div class="qa__body"><p>É o primeiro passo online para quem quer saber se o alinhador SouSmile combina com o seu caso. Você faz o agendamento pela <a href="https://www.sousmile.com/agenda/?leadProfile=PAV&amp;parceiro_origem=SouPr%C3%B3-VilaGomesCardim-SP(SamantaMoreiraProtte)&amp;store_id=864&amp;storeId=" target="_blank" rel="noopener">página da SouSmile</a>, e a avaliação clínica completa acontece depois, aqui no consultório.</p></div>
+          </details>
+          <details class="qa" data-reveal>
+            <summary>Quanto tempo dura o tratamento?<span class="qa__icon" aria-hidden="true"></span></summary>
+            <div class="qa__body"><p>Depende da complexidade do caso. Casos simples levam alguns meses e casos mais complexos, mais tempo. No planejamento digital você já sai com uma estimativa para o seu caso.</p></div>
+          </details>
+          <details class="qa" data-reveal>
+            <summary>O alinhador dói?<span class="qa__icon" aria-hidden="true"></span></summary>
+            <div class="qa__body"><p>É comum sentir uma pressão leve nos primeiros dias de cada placa nova. É o sinal de que os dentes estão se movendo, e o desconforto passa em pouco tempo.</p></div>
+          </details>
+          <details class="qa" data-reveal>
+            <summary>Posso comer normalmente?<span class="qa__icon" aria-hidden="true"></span></summary>
+            <div class="qa__body"><p>Sim. Você tira o alinhador para comer e beber qualquer coisa que não seja água, escova os dentes e coloca de volta.</p></div>
+          </details>
+          <details class="qa" data-reveal>
+            <summary>O que é o preparo para cirurgia ortognática?<span class="qa__icon" aria-hidden="true"></span></summary>
+            <div class="qa__body"><p>Quando a mordida depende de um ajuste na posição dos ossos da face, o tratamento ortodôntico prepara os dentes antes da cirurgia e finaliza o encaixe depois. Eu conduzo essa parte junto com o cirurgião bucomaxilofacial.</p></div>
+          </details>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== CTA final / contato ===== -->
+    <section class="section cta" id="contato" aria-labelledby="cta-title">
+      <div class="wrap">
+        <div class="cta__card" data-reveal>
+          <svg class="mouth mouth--smile" data-mouth="smile" viewBox="0 0 400 230" aria-hidden="true"></svg>
+          <p class="eyebrow eyebrow--gold">Agende sua avaliação</p>
+          <h2 id="cta-title" class="cta__title">O primeiro passo é <em>uma conversa.</em></h2>
+          <p class="cta__lead">Escolha o melhor canal e marque um horário no consultório do Tatuapé.</p>
+          <div class="cta__actions">
+            <a class="btn btn--gold" href="https://linktr.ee/protteodonto" target="_blank" rel="noopener">
+              Agendar avaliação
+              <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M5 10h10M11 6l4 4-4 4"/></svg>
+            </a>
+            <a class="btn btn--line" href="https://www.sousmile.com/agenda/?leadProfile=PAV&amp;parceiro_origem=SouPr%C3%B3-VilaGomesCardim-SP(SamantaMoreiraProtte)&amp;store_id=864&amp;storeId=" target="_blank" rel="noopener">Pré-avaliação virtual</a>
+          </div>
+          <ul class="cta__info">
+            <li>
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s-7-6.2-7-11.5A7 7 0 0 1 19 9.5C19 14.8 12 21 12 21Z"/><circle cx="12" cy="9.5" r="2.5"/></svg>
+              <span>Tatuapé · São Paulo, SP</span>
+            </li>
+            <li>
+              <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/></svg>
+              <a href="https://www.instagram.com/protteodonto/" target="_blank" rel="noopener">@protteodonto</a>
+            </li>
+            <li>
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1"/><path d="M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1"/></svg>
+              <a href="https://linktr.ee/protteodonto" target="_blank" rel="noopener">linktr.ee/protteodonto</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="wrap footer__inner">
+      <a class="logo logo--light" href="#topo" aria-label="Protte Odonto, voltar ao início">
+        <span class="logo__word">PR<span class="logo__o">O<svg class="logo__smile" viewBox="0 0 40 16" aria-hidden="true"><path d="M3 3c6 11 28 11 34 0"/></svg></span>TTE</span>
+        <span class="logo__sub">odontologia</span>
+      </a>
+      <p class="footer__legal">
+        Dra. Samanta Protte · Especialista em Ortodontia<br>
+        Responsável técnica: RT CROSP 114427 · CRO CL 02289
+      </p>
+      <p class="footer__copy">© <span data-year>2026</span> Protte Odonto · Tatuapé, São Paulo</p>
+    </div>
+  </footer>
+
+  <script src="js/main.js" defer></script>
+  <script src="js/mouth3d.js" defer></script>
+</body>
+</html>
