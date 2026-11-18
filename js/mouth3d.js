@@ -1,13 +1,13 @@
-/* Protte Odonto — arcadas dentárias em 3D (Three.js)
-   Uma mesma cena 3D é usada em dois lugares:
-   1. Seção de alinhadores: os dentes acompanham as etapas da rolagem (progresso em stage._mouth, vindo de main.js).
-   2. Chamada final: sorriso alinhado girando devagar.
-   Se o WebGL ou o CDN falharem, as versões em SVG continuam no lugar. */
+/* Protte Odonto: arcada dentária em 3D (Three.js)
+   Na seção de alinhadores os dentes acompanham as etapas da rolagem
+   (progresso em stage._mouth, vindo de main.js).
+   O Three.js só é baixado quando a seção se aproxima da tela.
+   Se o WebGL ou o CDN falharem, a versão em SVG continua no lugar. */
 (() => {
   const stage = document.querySelector('[data-mouth-stage]');
   const stageHost = document.querySelector('[data-mouth-3d]');
-  const ctaHost = document.querySelector('[data-mouth-cta]');
   const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (!stage || !stageHost) return;
 
   let webgl = false;
   try {
@@ -16,13 +16,18 @@
   } catch (e) { webgl = false; }
   if (!webgl) return;
 
-  Promise.all([import('three'), import('three/addons/environments/RoomEnvironment.js')])
-    .then(([THREE, env]) => {
-      const kit = makeKit(THREE, env.RoomEnvironment);
-      if (stage && stageHost) runStage(kit);
-      if (ctaHost) runCta(kit);
-    })
-    .catch((e) => console.warn('3D indisponível; mantendo as versões em SVG.', e));
+  const load = () => Promise.all([import('three'), import('three/addons/environments/RoomEnvironment.js')])
+    .then(([THREE, env]) => runStage(makeKit(THREE, env.RoomEnvironment)))
+    .catch((e) => console.warn('3D indisponível; mantendo a versão em SVG.', e));
+
+  if ('IntersectionObserver' in window) {
+    const io = new IntersectionObserver((entries) => {
+      if (entries.some((en) => en.isIntersecting)) { io.disconnect(); load(); }
+    }, { rootMargin: '900px 0px' });
+    io.observe(stage);
+  } else {
+    load();
+  }
 
   /* =====================================================================
      Fábrica da cena
@@ -351,31 +356,5 @@
     });
     S.render();
     stage.classList.add('is-3d');
-  }
-
-  /* =====================================================================
-     2. Chamada final: sorriso alinhado girando devagar
-     ===================================================================== */
-  function runCta(kit) {
-    const canvas = document.createElement('canvas');
-    ctaHost.appendChild(canvas);
-    const S = kit.create(canvas);
-    const { camera, model, upperJaw, lowerJaw } = S;
-    S.setAlign(1);
-    upperJaw.rotation.x = -0.12;
-    lowerJaw.rotation.x = 0.16;
-    camera.position.set(0, 2.2, 12.4);
-    camera.lookAt(0, -0.2, -1.8);
-    const resize = () => { const w = ctaHost.clientWidth || 300; S.setSize(w, Math.round(w / 1.6)); };
-    new ResizeObserver(resize).observe(ctaHost);
-    resize();
-    const t0 = performance.now();
-    visibleLoop(ctaHost, (now) => {
-      const t = (now - t0) / 1000;
-      model.rotation.y = reduced ? -0.3 : Math.sin(t * 0.5) * 0.6;
-      S.render();
-    });
-    S.render();
-    ctaHost.classList.add('is-3d');
   }
 })();
